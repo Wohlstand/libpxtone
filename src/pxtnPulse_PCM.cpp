@@ -18,7 +18,7 @@ WAVEFORMATCHUNK;
 
 void pxtnPulse_PCM::Release()
 {
-	if( _p_smp ) free( _p_smp ); _p_smp = NULL;
+	if( _p_smp ) { free( _p_smp ); } _p_smp = NULL;
 	_ch       =    0;
 	_sps      =    0;
 	_bps      =    0;

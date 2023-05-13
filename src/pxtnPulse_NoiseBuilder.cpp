@@ -118,7 +118,7 @@ pxtnPulse_NoiseBuilder::pxtnPulse_NoiseBuilder( pxtnIO_r io_read, pxtnIO_w io_wr
 pxtnPulse_NoiseBuilder::~pxtnPulse_NoiseBuilder()
 {
 	_b_init = false;
-	if( _freq ) delete _freq; _freq = NULL;
+	if( _freq ) { delete _freq; } _freq = NULL;
 	for( int32_t i = 0; i < pxWAVETYPE_num; i++ ) pxtnMem_free( (void **)&_p_tables[ i ] );
 }
 

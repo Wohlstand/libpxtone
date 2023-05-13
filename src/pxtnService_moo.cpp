@@ -31,7 +31,7 @@ bool pxtnService::_moo_release()
 	if( !_moo_b_init ) return false;
 	_moo_b_init = false;
 	SAFE_DELETE( _moo_freq );
-	if( _moo_group_smps ) free( _moo_group_smps ); _moo_group_smps = NULL;
+	if( _moo_group_smps ) { free( _moo_group_smps ); } _moo_group_smps = NULL;
 	return true;
 }
 

@@ -150,7 +150,7 @@ pxtnPulse_Oggv::~pxtnPulse_Oggv()
 
 void pxtnPulse_Oggv::Release()
 {
-	if( _p_data ) free( _p_data ); _p_data = NULL;
+	if( _p_data ) { free( _p_data ); } _p_data = NULL;
 	_ch      = 0;
 	_sps2    = 0;
 	_smp_num = 0;
@@ -171,7 +171,7 @@ term:
 
 	if( res != pxtnOK )
 	{
-		if( _p_data ) free( _p_data ); _p_data = NULL; _size = 0;
+		if( _p_data ) { free( _p_data ); } _p_data = NULL; _size = 0;
 	}
 	return res;
 }
@@ -303,7 +303,7 @@ End:
 
 	if( !b_ret )
 	{
-		if( _p_data ) free( _p_data ); _p_data = NULL; _size = 0;
+		if( _p_data ) { free( _p_data ); } _p_data = NULL; _size = 0;
 	}
 
 	return b_ret;

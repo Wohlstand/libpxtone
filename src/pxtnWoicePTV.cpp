@@ -118,8 +118,8 @@ pxtnERR pxtnWoice::_Read_Wave( void* desc, pxtnVOICEUNIT *p_vc )
 		if( !pxtnMem_zero_alloc( (void **)&p_vc->wave.points, sizeof(pxtnPOINT) * num ) ) return pxtnERR_memory;
 		for( i = 0; i < num; i++ )
 		{
-			if( !_io_read( desc, &uc, 1, 1 ) ) return pxtnERR_desc_r; p_vc->wave.points[ i ].x = uc;
-			if( !_io_read( desc, &sc, 1, 1 ) ) return pxtnERR_desc_r; p_vc->wave.points[ i ].y = sc;
+			if( !_io_read( desc, &uc, 1, 1 ) ) { return pxtnERR_desc_r; } p_vc->wave.points[ i ].x = uc;
+			if( !_io_read( desc, &sc, 1, 1 ) ) { return pxtnERR_desc_r; } p_vc->wave.points[ i ].y = sc;
 		}
 		num = p_vc->wave.num;
 		break;
