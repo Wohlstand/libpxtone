@@ -3,9 +3,13 @@
 
 #ifdef pxINCLUDE_OGGVORBIS
 
+#if defined(pxINCLUDE_OGGVORBIS_TREMOR)
+#include <tremor/ivorbisfile.h>
+#else
 #define OV_EXCLUDE_STATIC_CALLBACKS
 #include <vorbis/codec.h>
 #include <vorbis/vorbisfile.h>
+#endif
 
 #include "./pxtnPulse_Oggv.h"
 
@@ -96,6 +100,7 @@ bool pxtnPulse_Oggv::_SetInformation()
 	oc.close_func = _mclose_dummy;
 	oc.tell_func  = _mtell       ;
 
+	bool           vf_loaded = false;
 	OggVorbis_File vf;
 
 	vorbis_info*  vi;
@@ -109,7 +114,9 @@ bool pxtnPulse_Oggv::_SetInformation()
 	case OV_EFAULT    : goto End; //{printf("Internal logic fault; indicates a bug or heap/stack corruption. \n");exit(1);}
 	default:
 		break;
-    }
+	}
+
+	vf_loaded = true;
 
 	vi = ov_info( &vf,-1 );
 
@@ -117,12 +124,11 @@ bool pxtnPulse_Oggv::_SetInformation()
 	_sps2    = vi->rate    ;
 	_smp_num = (int32_t)ov_pcm_total( &vf, -1 );
 
-    // end.
-    ov_clear( &vf );
-
+	// end.
 	b_ret = true;
 
 End:
+    if( vf_loaded ) ov_clear( &vf );
     return b_ret;
 
 }
@@ -181,9 +187,13 @@ pxtnERR pxtnPulse_Oggv::Decode( pxtnPulse_PCM * p_pcm ) const
 {
 	pxtnERR res = pxtnERR_VOID;
 
+	bool           vf_loaded = false;
 	OggVorbis_File vf;
 	vorbis_info*   vi;
 	ov_callbacks   oc;
+
+	int32_t current_section;
+	char    pcmout[ 4096 ] = {0};
 
 	OVMEM ovmem;
 
@@ -207,15 +217,14 @@ pxtnERR pxtnPulse_Oggv::Decode( pxtnPulse_PCM * p_pcm ) const
 	default: break;
 	}
 
-    vi    = ov_info( &vf,-1 );
+	vf_loaded = true;
 
-	int32_t current_section;
-	char    pcmout[ 4096 ] = {0}; //take 4k out of the data segment, not the stack
+	vi    = ov_info( &vf,-1 );
+
+	//take 4k out of the data segment, not the stack
 	{
 		int32_t smp_num = (int32_t)ov_pcm_total( &vf, -1 );
-		uint32_t bytes;
-
-		bytes = vi->channels * 2 * smp_num;
+		// uint32_t bytes = vi->channels * 2 * smp_num;
 
 		res = p_pcm->Create( vi->channels, vi->rate, 16, smp_num );
 		if( res != pxtnOK ) goto term;
@@ -226,19 +235,22 @@ pxtnERR pxtnPulse_Oggv::Decode( pxtnPulse_PCM * p_pcm ) const
 		uint8_t  *p  = (uint8_t*)p_pcm->get_p_buf_variable();
 		do
 		{
+#if defined(pxINCLUDE_OGGVORBIS_TREMOR)
+			ret = ov_read( &vf, pcmout, 4096, &current_section );
+#else
 			ret = ov_read( &vf, pcmout, 4096, px_IS_BIG_ENDIAN, 2, 1, &current_section );
+#endif
 			if( ret > 0 ) memcpy( p, pcmout, ret ); //fwrite( pcmout, 1, ret, of );
 			p += ret;
 		}
 		while( ret );
 	}
 
-    // end.
-    ov_clear( &vf );
-
+	// end.
 	res = pxtnOK;
 
 term:
+    if( vf ) stb_vorbis_close( vf );
     return res;
 }
 
