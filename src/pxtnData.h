@@ -44,6 +44,31 @@ public :
 
 	bool init();
 	bool Xxx ();
+
+
+	// Misc. functions
+
+	static inline float cast_to_float( int32_t in )
+	{
+		union
+		{
+			float f;
+			int32_t i;
+		} v;
+		v.i = in;
+		return v.f;
+	}
+
+	static inline int32_t cast_to_int( float in )
+	{
+		union
+		{
+			float f;
+			int32_t i;
+		} v;
+		v.f = in;
+		return v.i;
+	}
 };
 
 #endif
