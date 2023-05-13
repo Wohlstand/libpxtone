@@ -3,6 +3,7 @@
 
 #ifdef pxINCLUDE_OGGVORBIS
 
+#define OV_EXCLUDE_STATIC_CALLBACKS
 #include <vorbis/codec.h>
 #include <vorbis/vorbisfile.h>
 
