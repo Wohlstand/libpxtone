@@ -13,6 +13,10 @@ set_target_properties(read_write
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/test-bin"
 )
 
+if(IS_BIG_ENDIAN)
+    target_compile_definitions(read_write PRIVATE -Dpx_BIG_ENDIAN)
+endif()
+
 if(ENABLE_ADDRESS_SANITIZER)
     target_compile_options(read_write PRIVATE -fsanitize=address)
     target_link_options(read_write PRIVATE -fsanitize=address)
