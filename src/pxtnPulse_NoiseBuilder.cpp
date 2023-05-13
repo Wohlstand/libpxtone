@@ -131,14 +131,13 @@ void  pxtnPulse_NoiseBuilder::_random_reset()
 short pxtnPulse_NoiseBuilder::_random_get()
 {
 	int32_t  w1, w2;
-	char *p1;
-	char *p2;
 
 	w1 = (short)_rand_buf[ 0 ] + _rand_buf[ 1 ];
-	p1 = (char *)&w1;
-	p2 = (char *)&w2;
-	p2[ 0 ] = p1[ 1 ];
-	p2[ 1 ] = p1[ 0 ];
+
+	w2  =  (w1 & 0xFFFF0000);
+	w2 |= ((w1 >> 8) & 0x000000FF);
+	w2 |= ((w1 << 8) & 0x0000FF00);
+
 	_rand_buf[ 1 ] = (short)_rand_buf[ 0 ];
 	_rand_buf[ 0 ] = (short)w2;
 

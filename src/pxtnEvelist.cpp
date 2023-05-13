@@ -728,8 +728,8 @@ bool pxtnEvelist::io_Write( void* desc, int32_t rough ) const
 	}
 
 	int32_t size = sizeof(int32_t) + ralatived_size;
-	if( !_io_write( desc, &size   , sizeof(int32_t), 1 ) ) return false;
-	if( !_io_write( desc, &eve_num, sizeof(int32_t), 1 ) ) return false;
+	if( !_io_write_le32( desc, &size    ) ) return false;
+	if( !_io_write_le32( desc, &eve_num ) ) return false;
 
 	absolute = 0;
 
@@ -756,8 +756,8 @@ pxtnERR pxtnEvelist::io_Read( void* desc )
 	int32_t size     = 0;
 	int32_t eve_num  = 0;
 
-	if( !_io_read( desc, &size   , 4, 1 ) ) return pxtnERR_desc_r;
-	if( !_io_read( desc, &eve_num, 4, 1 ) ) return pxtnERR_desc_r;
+	if( !_io_read_le32( desc, &size    ) ) return pxtnERR_desc_r;
+	if( !_io_read_le32( desc, &eve_num ) ) return pxtnERR_desc_r;
 
 	int32_t clock    = 0;
 	int32_t absolute = 0;
@@ -784,8 +784,8 @@ int32_t pxtnEvelist::io_Read_EventNum( void* desc ) const
 	int32_t size    = 0;
 	int32_t eve_num = 0;
 
-	if( !_io_read( desc, &size   , 4, 1 ) ) return 0;
-	if( !_io_read( desc, &eve_num, 4, 1 ) ) return 0;
+	if( !_io_read_le32( desc, &size    ) ) return 0;
+	if( !_io_read_le32( desc, &eve_num ) ) return 0;
 
 	int32_t count   = 0;
 	int32_t clock   = 0;
@@ -818,6 +818,17 @@ typedef struct
 }
 _x4x_EVENTSTRUCT;
 
+#ifdef px_BIG_ENDIAN
+px_FORCE_INLINE void swapEndian( _x4x_EVENTSTRUCT &evnt)
+{
+	evnt.unit_index = pxtnData::_swap16( evnt.unit_index );
+	evnt.event_kind = pxtnData::_swap16( evnt.event_kind );
+	evnt.data_num =   pxtnData::_swap16( evnt.data_num )  ;
+	evnt.rrr =        pxtnData::_swap16( evnt.rrr )       ;
+	evnt.event_num =  pxtnData::_swap32( evnt.event_num ) ;
+}
+#endif
+
 // write event.
 pxtnERR pxtnEvelist::io_Unit_Read_x4x_EVENT( void* desc, bool bTailAbsolute, bool bCheckRRR )
 {
@@ -828,8 +839,9 @@ pxtnERR pxtnEvelist::io_Unit_Read_x4x_EVENT( void* desc, bool bTailAbsolute, boo
 	int32_t          e        = 0;
 	int32_t          size     = 0;
 
-	if( !_io_read( desc, &size, 4,                          1 ) ) return pxtnERR_desc_r;
+	if( !_io_read_le32( desc, &size                           ) ) return pxtnERR_desc_r;
 	if( !_io_read( desc, &evnt, sizeof( _x4x_EVENTSTRUCT ), 1 ) ) return pxtnERR_desc_r;
+	swapEndian( evnt );
 
 	if( evnt.data_num != 2               ) return pxtnERR_fmt_unknown;
 	if( evnt.event_kind >= EVENTKIND_NUM ) return pxtnERR_fmt_unknown;
@@ -861,8 +873,9 @@ pxtnERR pxtnEvelist::io_Read_x4x_EventNum( void* desc, int32_t* p_num ) const
 	int32_t          e    =  0 ;
 	int32_t          size =  0 ;
 
-	if( !_io_read( desc, &size, 4,                          1 ) ) return pxtnERR_desc_r;
+	if( !_io_read_le32( desc, &size                           ) ) return pxtnERR_desc_r;
 	if( !_io_read( desc, &evnt, sizeof( _x4x_EVENTSTRUCT ), 1 ) ) return pxtnERR_desc_r;
+	swapEndian( evnt );
 
 	// support only 2
 	if( evnt.data_num != 2 ) return pxtnERR_fmt_unknown;

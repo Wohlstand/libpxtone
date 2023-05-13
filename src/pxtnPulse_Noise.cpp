@@ -159,7 +159,7 @@ bool pxtnPulse_Noise::write( void* desc, int32_t *p_add ) const
 	else        seek =      0;
 
 	if( !_io_write( desc,_code, 1, 8 ) ) goto End;
-	if( !_io_write( desc,&_ver, 4, 1 ) ) goto End;
+	if( !_io_write_le32( desc, &_ver ) ) goto End;
 	seek += 12;
 	if( !_data_w_v( desc, _smp_num_44k, &seek ) ) goto End;
 
@@ -225,7 +225,7 @@ pxtnERR pxtnPulse_Noise::read( void* desc )
 
 	if( !_io_read( desc, code, 1, 8 )         ){ res = pxtnERR_desc_r     ; goto term; }
 	if( memcmp( code, _code, 8 )        ){ res = pxtnERR_inv_code   ; goto term; }
-	if( !_io_read( desc, &ver     , 4, 1 )    ){ res = pxtnERR_desc_r     ; goto term; }
+	if( !_io_read_le32( desc, &ver )    ){ res = pxtnERR_desc_r     ; goto term; }
 	if( ver > _ver                      ){ res = pxtnERR_fmt_new    ; goto term; }
 	if( !_data_r_v( desc, &_smp_num_44k )    ){ res = pxtnERR_desc_r     ; goto term; }
 	if( !_io_read( desc, &unit_num, 1, 1 )    ){ res = pxtnERR_desc_r     ; goto term; }

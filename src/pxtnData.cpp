@@ -40,7 +40,8 @@ static bool _v_to_int( uint32_t* p_i, const uint8_t* bytes5, int32_t byte_num )
 		return false;
 	}
 
-	*p_i = *((int32_t*)b);
+	*p_i = static_cast<uint32_t>( (b[0] & 0x000000FF) | ((b[1] << 8) & 0x0000FF00) | ((b[2] << 16) & 0x00FF0000) | ((b[3] << 24) & 0xFF000000) );
+
 	return true;
 }
 
@@ -48,10 +49,10 @@ void _int_to_v( uint8_t* bytes5, int32_t* p_byte_num, uint32_t i )
 {
 	uint8_t a[ 5 ] = {};
 
-	bytes5[ 0 ] = 0; a[ 0 ] = *( (uint8_t *)(&i) + 0 );
-	bytes5[ 1 ] = 0; a[ 1 ] = *( (uint8_t *)(&i) + 1 );
-	bytes5[ 2 ] = 0; a[ 2 ] = *( (uint8_t *)(&i) + 2 );
-	bytes5[ 3 ] = 0; a[ 3 ] = *( (uint8_t *)(&i) + 3 );
+	bytes5[ 0 ] = 0; a[ 0 ] = (uint8_t)( (i >> 0 ) & 0xFF );
+	bytes5[ 1 ] = 0; a[ 1 ] = (uint8_t)( (i >> 8 ) & 0xFF );
+	bytes5[ 2 ] = 0; a[ 2 ] = (uint8_t)( (i >> 16) & 0xFF );
+	bytes5[ 3 ] = 0; a[ 3 ] = (uint8_t)( (i >> 24) & 0xFF );
 	bytes5[ 4 ] = 0; a[ 4 ] = 0;
 
 	// 1byte(7bit)
@@ -98,6 +99,89 @@ void _int_to_v( uint8_t* bytes5, int32_t* p_byte_num, uint32_t i )
 		bytes5[3] = (a[2]>>5) | ((a[3]<<3)&0x7F) | 0x80;
 		bytes5[4] = (a[3]>>4) | ((a[4]<<4)&0x7F);
 	}
+}
+
+bool pxtnData::_io_read_le16 ( void* user, void* p_dst ) const
+{
+	uint8_t in[2] = {0, 0};
+	uint16_t *out = reinterpret_cast<uint16_t*>( p_dst );
+
+	bool ret = _io_read( user, (void*)in, 1, 2 );
+	*out = static_cast<uint16_t>( (in[0] & 0x00FF) | ((in[1] << 8) & 0xFF00) );
+
+	return ret;
+}
+
+bool pxtnData::_io_read_le32 ( void* user, void* p_dst ) const
+{
+	uint8_t in[4] = {0, 0, 0, 0};
+	uint32_t *out = reinterpret_cast<uint32_t*>( p_dst );
+
+	bool ret = _io_read( user, (void*)in, 1, 4 );
+	*out = static_cast<uint32_t>( (in[0] & 0x000000FF) | ((in[1] << 8) & 0x0000FF00) | ((in[2] << 16) & 0x00FF0000) | ((in[3] << 24) & 0xFF000000) );
+
+	return ret;
+}
+
+bool pxtnData::_io_read_le32f ( void *user, void *p_dst ) const
+{
+	uint8_t in[4] = {0, 0, 0, 0};
+
+	union
+	{
+		float f;
+		uint32_t ui32;
+	} swapper;
+
+	float *out = reinterpret_cast<float*>( p_dst );
+	bool ret = _io_read( user, (void*)in, 1, 4 );
+	swapper.ui32 = static_cast<uint32_t>( (in[0] & 0x000000FF) | ((in[1] << 8) & 0x0000FF00) | ((in[2] << 16) & 0x00FF0000) | ((in[3] << 24) & 0xFF000000) );
+	*out = swapper.f;
+
+	return ret;
+}
+
+bool pxtnData::_io_write_le16( void *user, const void *p_dst ) const
+{
+	uint8_t out[2] = {0, 0};
+	uint16_t in = *reinterpret_cast<const uint16_t*>( p_dst );
+
+	out[0] = ( (in >> 0) & 0xFF );
+	out[1] = ( (in >> 8) & 0xFF );
+
+	return _io_write( user, (void*)out, 1, 2 );
+}
+
+bool pxtnData::_io_write_le32(void *user, const void *p_dst ) const
+{
+	uint8_t out[4] = {0, 0};
+	uint32_t in = *reinterpret_cast<const uint32_t*>( p_dst );
+
+	out[0] = ( (in >>  0) & 0xFF );
+	out[1] = ( (in >>  8) & 0xFF );
+	out[2] = ( (in >> 16) & 0xFF );
+	out[3] = ( (in >> 24) & 0xFF );
+
+	return _io_write( user, (void*)out, 1, 4 );
+}
+
+bool pxtnData::_io_write_le32f( void *user, const void *p_dst ) const
+{
+	uint8_t out[4] = {0, 0};
+	union
+	{
+		float f;
+		uint32_t ui32;
+	} swapper;
+
+	swapper.f = *reinterpret_cast<const float*>( p_dst );
+
+	out[0] = ( (swapper.ui32 >>  0) & 0xFF );
+	out[1] = ( (swapper.ui32 >>  8) & 0xFF );
+	out[2] = ( (swapper.ui32 >> 16) & 0xFF );
+	out[3] = ( (swapper.ui32 >> 24) & 0xFF );
+
+	return _io_write( user, (void*)out, 1, 4 );
 }
 
 int32_t pxtnData::_data_check_v_size ( uint32_t v ) const

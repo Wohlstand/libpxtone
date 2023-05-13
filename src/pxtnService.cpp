@@ -701,6 +701,14 @@ typedef struct
 }
 _ASSIST_WOICE;
 
+#ifdef px_BIG_ENDIAN
+px_FORCE_INLINE void swapEndian( _ASSIST_WOICE &assi)
+{
+	assi.woice_index = pxtnData::_swap16( assi.woice_index );
+	assi.rrr =         pxtnData::_swap16( assi.rrr )        ;
+}
+#endif
+
 bool pxtnService::_io_assiWOIC_w( void* desc, int32_t idx ) const
 {
 	if( !_b_init ) return false;
@@ -713,10 +721,10 @@ bool pxtnService::_io_assiWOIC_w( void* desc, int32_t idx ) const
 	if( name_size > pxtnMAX_TUNEWOICENAME ) return false;
 
 	memcpy( assi.name, p_name, name_size );
-	assi.woice_index = (uint16_t)idx;
+	assi.woice_index = pxSwapLE16( (uint16_t)idx );
 
 	size = sizeof( _ASSIST_WOICE );
-	if( !_io_write( desc, &size, sizeof(uint32_t), 1 ) ) return false;
+	if( !_io_write_le32( desc, &size                 ) ) return false;
 	if( !_io_write( desc, &assi, size,             1 ) ) return false;
 
 	return true;
@@ -729,9 +737,11 @@ pxtnERR pxtnService::_io_assiWOIC_r( void* desc )
 	_ASSIST_WOICE assi = {0};
 	int32_t       size =  0 ;
 
-	if( !_io_read( desc, &size,    4, 1 )    ) return pxtnERR_desc_r     ;
+	if( !_io_read_le32( desc, &size )    ) return pxtnERR_desc_r     ;
 	if( size != sizeof(assi)           ) return pxtnERR_fmt_unknown;
 	if( !_io_read( desc, &assi, size, 1 )    ) return pxtnERR_desc_r     ;
+	swapEndian( assi );
+
 	if( assi.rrr                       ) return pxtnERR_fmt_unknown;
 	if( assi.woice_index >= _woice_num ) return pxtnERR_fmt_unknown;
 
@@ -753,6 +763,15 @@ typedef struct
 }
 _ASSIST_UNIT;
 
+#ifdef px_BIG_ENDIAN
+px_FORCE_INLINE void swapEndian( _ASSIST_UNIT &unit)
+{
+	unit.unit_index = pxtnData::_swap16( unit.unit_index );
+	unit.rrr =        pxtnData::_swap16( unit.rrr )       ;
+}
+#endif
+
+
 bool pxtnService::_io_assiUNIT_w( void* desc, int32_t idx ) const
 {
 	if( !_b_init ) return false;
@@ -763,10 +782,10 @@ bool pxtnService::_io_assiUNIT_w( void* desc, int32_t idx ) const
 	const char*  p_name = _units[ idx ]->get_name_buf( &name_size );
 
 	memcpy( assi.name, p_name, name_size );
-	assi.unit_index = (uint16_t)idx;
+	assi.unit_index = pxSwapLE16( (uint16_t)idx );
 
 	size = sizeof(assi);
-	if( !_io_write( desc, &size, sizeof(uint32_t), 1 ) ) return false;
+	if( !_io_write_le32( desc, &size ) ) return false;
 	if( !_io_write( desc, &assi, size            , 1 ) ) return false;
 
 	return true;
@@ -779,9 +798,11 @@ pxtnERR pxtnService::_io_assiUNIT_r( void* desc )
 	_ASSIST_UNIT assi = {0};
 	int32_t      size;
 
-	if( !_io_read( desc, &size, 4,            1 ) ) return pxtnERR_desc_r     ;
+	if( !_io_read_le32( desc, &size       ) ) return pxtnERR_desc_r     ;
 	if( size != sizeof(assi)                ) return pxtnERR_fmt_unknown;
 	if( !_io_read( desc, &assi, sizeof(assi), 1 ) ) return pxtnERR_desc_r     ;
+	swapEndian( assi );
+
 	if( assi.rrr                            ) return pxtnERR_fmt_unknown;
 	if( assi.unit_index >= _unit_num        ) return pxtnERR_fmt_unknown;
 
@@ -800,6 +821,15 @@ typedef struct
 }
 _NUM_UNIT;
 
+#ifdef px_BIG_ENDIAN
+px_FORCE_INLINE void swapEndian( _NUM_UNIT &data)
+{
+	data.num = pxtnData::_swap16( data.num );
+	data.rrr = pxtnData::_swap16( data.rrr );
+}
+#endif
+
+
 bool pxtnService::_io_UNIT_num_w( void* desc ) const
 {
 	if( !_b_init ) return false;
@@ -809,11 +839,11 @@ bool pxtnService::_io_UNIT_num_w( void* desc ) const
 
 	memset( &data, 0, sizeof( _NUM_UNIT ) );
 
-	data.num = (int16_t)_unit_num;
+	data.num = pxSwapLE16((int16_t)_unit_num);
 
 	size     = sizeof(_NUM_UNIT);
 
-	if( !_io_write( desc, &size, sizeof(int32_t), 1 ) ) return false;
+	if( !_io_write_le32( desc, &size                ) ) return false;
 	if( !_io_write( desc, &data, size           , 1 ) ) return false;
 
 	return true;
@@ -826,9 +856,11 @@ pxtnERR pxtnService::_io_UNIT_num_r    ( void* desc, int32_t* p_num )
 	_NUM_UNIT data = {0};
 	int32_t   size =  0 ;
 
-	if( !_io_read( desc, &size, 4,                   1 ) ) return pxtnERR_desc_r     ;
+	if( !_io_read_le32( desc, &size              ) ) return pxtnERR_desc_r     ;
 	if( size != sizeof( _NUM_UNIT )                ) return pxtnERR_fmt_unknown;
 	if( !_io_read( desc, &data, sizeof( _NUM_UNIT ), 1 ) ) return pxtnERR_desc_r     ;
+	swapEndian( data );
+
 	if( data.rrr                                   ) return pxtnERR_fmt_unknown;
 	if( data.num > _unit_max                       ) return pxtnERR_fmt_new    ;
 	if( data.num <         0                       ) return pxtnERR_fmt_unknown;
@@ -845,7 +877,7 @@ pxtnERR pxtnService::write( void* desc, bool b_tune, uint16_t exe_ver )
 {
 	if( !_b_init ) return pxtnERR_INIT;
 
-	bool     b_ret = false;
+//	bool     b_ret = false;
 	int32_t  rough = b_tune ? 10 : 1;
 	uint16_t rrr   =            0;
 	pxtnERR  res   = pxtnERR_VOID;
@@ -855,8 +887,8 @@ pxtnERR pxtnService::write( void* desc, bool b_tune, uint16_t exe_ver )
 	else        { if( !_io_write( desc, _code_proj_v5, 1, _VERSIONSIZE ) ){ res = pxtnERR_desc_w; goto End; } }
 
 	// exe version
-	if( !_io_write( desc, &exe_ver, sizeof(uint16_t), 1 )                ){ res = pxtnERR_desc_w; goto End; }
-	if( !_io_write( desc, &rrr    , sizeof(uint16_t), 1 )                ){ res = pxtnERR_desc_w; goto End; }
+	if( !_io_write_le16( desc, &exe_ver )                                ){ res = pxtnERR_desc_w; goto End; }
+	if( !_io_write_le16( desc, &rrr )                                    ){ res = pxtnERR_desc_w; goto End; }
 
 	// master
 	if( !_io_write( desc, _code_MasterV5    , 1, _CODESIZE ) ){ res = pxtnERR_desc_w; goto End; }
@@ -1063,8 +1095,8 @@ pxtnERR pxtnService::_ReadVersion( void* desc, _enum_FMTVER *p_fmt_ver, uint16_t
 	else return pxtnERR_fmt_unknown;
 
 	// exe version
-	if( !_io_read( desc, p_exe_ver, sizeof(uint16_t), 1 ) ) return pxtnERR_desc_r;
-	if( !_io_read( desc, &dummy   , sizeof(uint16_t), 1 ) ) return pxtnERR_desc_r;
+	if( !_io_read_le16( desc, p_exe_ver ) ) return pxtnERR_desc_r;
+	if( !_io_read_le16( desc, &dummy    ) ) return pxtnERR_desc_r;
 
 	return pxtnOK;
 }
@@ -1172,7 +1204,7 @@ pxtnERR pxtnService::_pre_count_event( void* desc, int32_t* p_count )
 		case _TAG_assiUNIT    :
 		case _TAG_assiWOIC    :
 
-			if( !_io_read( desc, &size, sizeof(int32_t), 1 ) ){ res = pxtnERR_desc_r; goto term; }
+			if( !_io_read_le32( desc, &size ) ){ res = pxtnERR_desc_r; goto term; }
 			if( !_io_seek( desc, SEEK_CUR, size )            ){ res = pxtnERR_desc_r; goto term; }
 			break;
 
@@ -1279,6 +1311,20 @@ typedef struct
 }
 _x1x_PROJECT;
 
+#ifdef px_BIG_ENDIAN
+px_FORCE_INLINE void swapEndian( _x1x_PROJECT &prjc)
+{
+	prjc.x1x_beat_tempo =  pxtnData::_swap_float( prjc.x1x_beat_tempo );
+	prjc.x1x_beat_clock =  pxtnData::_swap16( prjc.x1x_beat_clock )    ;
+	prjc.x1x_beat_num =    pxtnData::_swap16( prjc.x1x_beat_num )      ;
+	prjc.x1x_beat_note =   pxtnData::_swap16( prjc.x1x_beat_note )     ;
+	prjc.x1x_meas_num =    pxtnData::_swap16( prjc.x1x_meas_num )      ;
+	prjc.x1x_channel_num = pxtnData::_swap16( prjc.x1x_channel_num )   ;
+	prjc.x1x_bps =         pxtnData::_swap16( prjc.x1x_bps )           ;
+	prjc.x1x_sps =         pxtnData::_swap16( prjc.x1x_sps )           ;
+}
+#endif
+
 bool pxtnService::_x1x_Project_Read( void* desc )
 {
 	if( !_b_init ) return false;
@@ -1288,8 +1334,9 @@ bool pxtnService::_x1x_Project_Read( void* desc )
 	int32_t  size;
 	float    beat_tempo;
 
-	if( !_io_read( desc, &size, 4,                      1 ) ) return false;
+	if( !_io_read_le32( desc, &size                       ) ) return false;
 	if( !_io_read( desc, &prjc, sizeof( _x1x_PROJECT ), 1 ) ) return false;
+	swapEndian( prjc );
 
 	beat_num   = prjc.x1x_beat_num  ;
 	beat_tempo = prjc.x1x_beat_tempo;

@@ -54,19 +54,30 @@ typedef struct
 }
 _OVERDRIVESTRUCT;
 
+#ifdef px_BIG_ENDIAN
+px_FORCE_INLINE void swapEndian( _OVERDRIVESTRUCT &over)
+{
+	over.xxx =   pxtnData::_swap16( over.xxx )    ;
+	over.group = pxtnData::_swap16( over.group )  ;
+	over.cut =   pxtnData::_swap_float( over.cut );
+	over.amp =   pxtnData::_swap_float( over.amp );
+	over.yyy =   pxtnData::_swap_float( over.yyy );
+}
+#endif
+
 bool pxtnOverDrive::Write( void* desc ) const
 {
 	_OVERDRIVESTRUCT over;
 	int32_t              size;
 
 	memset( &over, 0, sizeof( _OVERDRIVESTRUCT ) );
-	over.cut   = _cut_f;
-	over.amp   = _amp_f;
-	over.group = (uint16_t)_group;
+	over.cut   = pxSwapFloatLE( _cut_f );
+	over.amp   = pxSwapFloatLE( _amp_f );
+	over.group = pxSwapLE16( (uint16_t)_group );
 
 	// dela ----------
 	size = sizeof( _OVERDRIVESTRUCT );
-	if( !_io_write( desc, &size, sizeof(uint32_t), 1 ) ) return false;
+	if( !_io_write_le32( desc, &size            ) ) return false;
 	if( !_io_write( desc, &over, size,        1 ) ) return false;
 
 	return true;
@@ -78,8 +89,9 @@ pxtnERR pxtnOverDrive::Read( void* desc )
 	int32_t          size =  0 ;
 
 	memset( &over, 0, sizeof(_OVERDRIVESTRUCT) );
-	if( !_io_read( desc, &size, 4,                        1 ) ) return pxtnERR_desc_r;
+	if( !_io_read_le32( desc,                         &size ) ) return pxtnERR_desc_r;
 	if( !_io_read( desc, &over, sizeof(_OVERDRIVESTRUCT), 1 ) ) return pxtnERR_desc_r;
+	swapEndian( over );
 
 	if( over.xxx                         ) return pxtnERR_fmt_unknown;
 	if( over.yyy                         ) return pxtnERR_fmt_unknown;

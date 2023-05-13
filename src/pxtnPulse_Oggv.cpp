@@ -225,7 +225,7 @@ pxtnERR pxtnPulse_Oggv::Decode( pxtnPulse_PCM * p_pcm ) const
 		uint8_t  *p  = (uint8_t*)p_pcm->get_p_buf_variable();
 		do
 		{
-			ret = ov_read( &vf, pcmout, 4096, 0, 2, 1, &current_section );
+			ret = ov_read( &vf, pcmout, 4096, px_IS_BIG_ENDIAN, 2, 1, &current_section );
 			if( ret > 0 ) memcpy( p, pcmout, ret ); //fwrite( pcmout, 1, ret, of );
 			p += ret;
 		}
@@ -275,11 +275,11 @@ bool pxtnPulse_Oggv::pxtn_write( void* desc ) const
 {
 	if( !_p_data ) return false;
 
-	if( !_io_write( desc, &_ch     , sizeof(int32_t),    1 ) ) return false;
-	if( !_io_write( desc, &_sps2   , sizeof(int32_t),    1 ) ) return false;
-	if( !_io_write( desc, &_smp_num, sizeof(int32_t),    1 ) ) return false;
-	if( !_io_write( desc, &_size   , sizeof(int32_t),    1 ) ) return false;
-	if( !_io_write( desc,  _p_data , sizeof(char   ),_size ) ) return false;
+	if( !_io_write_le32( desc, &_ch                      ) ) return false;
+	if( !_io_write_le32( desc, &_sps2                    ) ) return false;
+	if( !_io_write_le32( desc, &_smp_num                 ) ) return false;
+	if( !_io_write_le32( desc, &_size                    ) ) return false;
+	if( !_io_write( desc,  _p_data , sizeof(char), _size ) ) return false;
 
 	return true;
 }
@@ -288,10 +288,10 @@ bool pxtnPulse_Oggv::pxtn_read( void* desc )
 {
 	bool  b_ret  = false;
 
-	if( !_io_read( desc, &_ch     , sizeof(int32_t), 1 ) ) goto End;
-	if( !_io_read( desc, &_sps2   , sizeof(int32_t), 1 ) ) goto End;
-	if( !_io_read( desc, &_smp_num, sizeof(int32_t), 1 ) ) goto End;
-	if( !_io_read( desc, &_size   , sizeof(int32_t), 1 ) ) goto End;
+	if( !_io_read_le32( desc, &_ch      ) ) goto End;
+	if( !_io_read_le32( desc, &_sps2    ) ) goto End;
+	if( !_io_read_le32( desc, &_smp_num ) ) goto End;
+	if( !_io_read_le32( desc, &_size    ) ) goto End;
 
 	if( !_size ) goto End;
 
