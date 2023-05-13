@@ -372,8 +372,8 @@ int32_t pxtnPulse_Noise::Compare     ( const pxtnPulse_Noise *p_src ) const
 
 		for( int32_t e = 0; e < _units[ u ].enve_num; e++ )
 		{
-			if( _units[ u ].enves[ e ].x != _units[ u ].enves[ e ].x ) return 1;
-			if( _units[ u ].enves[ e ].y != _units[ u ].enves[ e ].y ) return 1;
+			if( p_src->_units[ u ].enves[ e ].x != _units[ u ].enves[ e ].x ) return 1;
+			if( p_src->_units[ u ].enves[ e ].y != _units[ u ].enves[ e ].y ) return 1;
 		}
 	}
 	return 0;
