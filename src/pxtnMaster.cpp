@@ -113,7 +113,7 @@ bool pxtnMaster::io_w_v5( void* desc, int32_t rough ) const
 
 pxtnERR pxtnMaster::io_r_v5( void* desc )
 {
-	pxtnERR   res = pxtnERR_VOID;
+//	pxtnERR   res = pxtnERR_VOID;
 	int16_t   beat_clock   = 0;
 	int8_t    beat_num     = 0;
 	float     beat_tempo   = 0;
