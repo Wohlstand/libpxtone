@@ -893,5 +893,3 @@ bool Evelist_Kind_IsTail( int32_t kind )
 	if( kind == EVENTKIND_ON || kind == EVENTKIND_PORTAMENT ) return true;
 	return false;
 }
-
-

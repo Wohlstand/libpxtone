@@ -220,7 +220,7 @@ bool pxtnPulse_NoiseBuilder::Init()
 	_random_reset();
 	for( s = 0; s < _smp_num_rand; s++ ){ *p = _random_get(); p++; }
 
-    // saw2 --
+	// saw2 --
 	osci.ReadyGetSample( overtones_saw2, 16, 128, _smp_num, 0 );
 	p = _p_tables[ pxWAVETYPE_Saw2 ];
 	for( s = 0; s < _smp_num; s++ )
@@ -230,7 +230,7 @@ bool pxtnPulse_NoiseBuilder::Init()
 		p++;
 	}
 
-    // rect2 --
+	// rect2 --
 	osci.ReadyGetSample( overtones_rect2, 8, 128, _smp_num, 0 );
 	p = _p_tables[ pxWAVETYPE_Rect2 ];
 	for( s = 0; s < _smp_num; s++ )

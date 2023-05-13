@@ -568,4 +568,3 @@ int32_t pxtnPulse_PCM::get_buf_size() const
 {
 	return ( _smp_head + _smp_body + _smp_tail ) * _ch * _bps / 8;
 }
-

@@ -90,10 +90,10 @@ bool pxtnPulse_Oggv::_SetInformation()
 
 	// set callback func.
 	ov_callbacks   oc;
-    oc.read_func  = _mread       ;
-    oc.seek_func  = _mseek       ;
-    oc.close_func = _mclose_dummy;
-    oc.tell_func  = _mtell       ;
+	oc.read_func  = _mread       ;
+	oc.seek_func  = _mseek       ;
+	oc.close_func = _mclose_dummy;
+	oc.tell_func  = _mtell       ;
 
 	OggVorbis_File vf;
 
@@ -110,7 +110,7 @@ bool pxtnPulse_Oggv::_SetInformation()
 		break;
     }
 
-    vi = ov_info( &vf,-1 );
+	vi = ov_info( &vf,-1 );
 
 	_ch      = vi->channels;
 	_sps2    = vi->rate    ;
@@ -190,13 +190,13 @@ pxtnERR pxtnPulse_Oggv::Decode( pxtnPulse_PCM * p_pcm ) const
 	ovmem.pos   =       0;
 	ovmem.size  = _size  ;
 
-    // set callback func.
-    oc.read_func  = _mread       ;
-    oc.seek_func  = _mseek       ;
-    oc.close_func = _mclose_dummy;
-    oc.tell_func  = _mtell       ;
+	// set callback func.
+	oc.read_func  = _mread       ;
+	oc.seek_func  = _mseek       ;
+	oc.close_func = _mclose_dummy;
+	oc.tell_func  = _mtell       ;
 
-    switch( ov_open_callbacks( &ovmem, &vf, NULL, 0, oc ) )
+	switch( ov_open_callbacks( &ovmem, &vf, NULL, 0, oc ) )
 	{
 	case OV_EREAD     : res = pxtnERR_ogg; goto term; //{printf("A read from media returned an error.\n");exit(1);}
 	case OV_ENOTVORBIS: res = pxtnERR_ogg; goto term; //{printf("Bitstream is not Vorbis data. \n");exit(1);}
@@ -204,7 +204,7 @@ pxtnERR pxtnPulse_Oggv::Decode( pxtnPulse_PCM * p_pcm ) const
 	case OV_EBADHEADER: res = pxtnERR_ogg; goto term; //{printf("Invalid Vorbis bitstream header. \n");exit(1);}
 	case OV_EFAULT    : res = pxtnERR_ogg; goto term; //{printf("Internal logic fault; indicates a bug or heap/stack corruption. \n");exit(1);}
 	default: break;
-    }
+	}
 
     vi    = ov_info( &vf,-1 );
 
@@ -219,7 +219,7 @@ pxtnERR pxtnPulse_Oggv::Decode( pxtnPulse_PCM * p_pcm ) const
 		res = p_pcm->Create( vi->channels, vi->rate, 16, smp_num );
 		if( res != pxtnOK ) goto term;
 	}
-    // decode..
+	// decode..
 	{
 		int32_t ret = 0;
 		uint8_t  *p  = (uint8_t*)p_pcm->get_p_buf_variable();
