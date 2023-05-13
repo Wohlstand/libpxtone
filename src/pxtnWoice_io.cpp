@@ -370,7 +370,7 @@ pxtnERR pxtnWoice::io_mateOGGV_r( void* desc )
 
 		p_vc->type = pxtnVOICE_OggVorbis;
 
-		if( !p_vc->p_oggv->pxtn_read( desc ) ) goto End;
+		if( !p_vc->p_oggv->pxtn_read( desc ) ) { res= pxtnERR_desc_r; goto End;}
 
 		p_vc->voice_flags  = mate.voice_flags;
 		p_vc->basic_key    = mate.basic_key  ;
