@@ -52,7 +52,7 @@ void _int_to_v( uint8_t* bytes5, int* p_byte_num, uint32_t i )
 	bytes5[ 2 ] = 0; a[ 2 ] = *( (uint8_t *)(&i) + 2 );
 	bytes5[ 3 ] = 0; a[ 3 ] = *( (uint8_t *)(&i) + 3 );
 	bytes5[ 4 ] = 0; a[ 4 ] = 0;
-	
+
 	// 1byte(7bit)
 	if     ( i < 0x00000080 )
 	{
@@ -100,9 +100,9 @@ void _int_to_v( uint8_t* bytes5, int* p_byte_num, uint32_t i )
 }
 
 int32_t pxtnData::_data_check_v_size ( uint32_t v ) const
-{	
+{
 	if     ( v < 0x00000080 ) return 1; // 1byte( 7bit)
-	else if( v < 0x00004000 ) return 2; // 2byte(14bit)	
+	else if( v < 0x00004000 ) return 2; // 2byte(14bit)
 	else if( v < 0x00200000 ) return 3; // 3byte(21bit)
 	else if( v < 0x10000000 ) return 4; // 4byte(28bit)
 

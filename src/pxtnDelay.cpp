@@ -10,13 +10,13 @@ pxtnDelay::pxtnDelay( pxtnIO_r io_read, pxtnIO_w io_write, pxtnIO_seek io_seek, 
 {
 	_set_io_funcs( io_read, io_write, io_seek, io_pos );
 
-	_b_played = true; 
-	_unit     = DELAYUNIT_Beat;    
+	_b_played = true;
+	_unit     = DELAYUNIT_Beat;
 	_group    =    0;
 	_rate     = 33.0;
 	_freq     =  3.f;
-	_smp_num  =    0;  
-	_offset   =    0;  
+	_smp_num  =    0;
+	_offset   =    0;
 	_rate_s32 =  100;
 
 	memset( _bufs, 0, sizeof(_bufs) );

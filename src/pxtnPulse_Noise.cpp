@@ -222,16 +222,16 @@ pxtnERR pxtnPulse_Noise::read( void* desc )
 	char       code[ 8 ] = {0};
 
 	Release();
-	
+
 	if( !_io_read( desc, code, 1, 8 )         ){ res = pxtnERR_desc_r     ; goto term; }
 	if( memcmp( code, _code, 8 )        ){ res = pxtnERR_inv_code   ; goto term; }
-	if( !_io_read( desc, &ver     , 4, 1 )    ){ res = pxtnERR_desc_r     ; goto term; }	
-	if( ver > _ver                      ){ res = pxtnERR_fmt_new    ; goto term; }	
+	if( !_io_read( desc, &ver     , 4, 1 )    ){ res = pxtnERR_desc_r     ; goto term; }
+	if( ver > _ver                      ){ res = pxtnERR_fmt_new    ; goto term; }
 	if( !_data_r_v( desc, &_smp_num_44k )    ){ res = pxtnERR_desc_r     ; goto term; }
 	if( !_io_read( desc, &unit_num, 1, 1 )    ){ res = pxtnERR_desc_r     ; goto term; }
 	if( unit_num < 0                    ){ res = pxtnERR_inv_data   ; goto term; }
 	if( unit_num > MAX_NOISEEDITUNITNUM ){ res = pxtnERR_fmt_unknown; goto term; }
-	_unit_num = unit_num;			    
+	_unit_num = unit_num;
 
 	if( !pxtnMem_zero_alloc( (void**)&_units, sizeof(pxNOISEDESIGN_UNIT) * _unit_num ) ){ res = pxtnERR_memory; goto term; }
 
@@ -261,7 +261,7 @@ pxtnERR pxtnPulse_Noise::read( void* desc )
 			if( !_io_read( desc, &byte, 1, 1 ) ){ res = pxtnERR_desc_r; goto term; }
 			pU->pan = byte;
 		}
-		
+
 		if( flags & NOISEEDITFLAG_OSC_MAIN ){ res = _ReadOscillator( &pU->main, desc ); if( res != pxtnOK ) goto term; }
 		if( flags & NOISEEDITFLAG_OSC_FREQ ){ res = _ReadOscillator( &pU->freq, desc ); if( res != pxtnOK ) goto term; }
 		if( flags & NOISEEDITFLAG_OSC_VOLU ){ res = _ReadOscillator( &pU->volu, desc ); if( res != pxtnOK ) goto term; }

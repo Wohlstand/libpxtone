@@ -74,7 +74,7 @@ public:
 
 	bool    write       ( void* desc, int32_t *p_add ) const;
 	pxtnERR read        ( void* desc );
-					    
+
 	void Release        ( );
 	bool Allocate       ( int32_t unit_num, int32_t envelope_num );
 	bool copy_from      ( const pxtnPulse_Noise *src );

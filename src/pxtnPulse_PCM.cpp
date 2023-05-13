@@ -7,10 +7,10 @@
 typedef struct
 {
 	uint16_t formatID;     // PCM:0x0001
-	uint16_t ch;           // 
-	uint32_t sps;          // 
+	uint16_t ch;           //
+	uint32_t sps;          //
 	uint32_t byte_per_sec; // byte per sec.
-	uint16_t block_size;   // 
+	uint16_t block_size;   //
 	uint16_t bps;          // bit per sample.
 	uint16_t ext;          // no use for pcm.
 }
@@ -96,7 +96,7 @@ pxtnERR pxtnPulse_PCM::read( void* desc )
 	// read format.
 	if( !_io_read( desc ,&size  , sizeof(uint32_t), 1 ) ){ res = pxtnERR_desc_r     ; goto term; }
 	if( !_io_read( desc, &format,               18, 1 ) ){ res = pxtnERR_desc_r     ; goto term; }
-	
+
 	if( format.formatID != 0x0001               ){ res = pxtnERR_pcm_unknown; goto term; }
 	if( format.ch  != 1 && format.ch  !=  2     ){ res = pxtnERR_pcm_unknown; goto term; }
 	if( format.bps != 8 && format.bps != 16     ){ res = pxtnERR_pcm_unknown; goto term; }
@@ -186,7 +186,7 @@ bool pxtnPulse_PCM::write  ( void* desc, const char* pstrLIST ) const
 	if( !_io_write( desc, tag_WAVE,     sizeof(char    ), 4 ) ) goto End;
 	if( !_io_write( desc, tag_fmt_,     sizeof(char    ), 8 ) ) goto End;
 	if( !_io_write( desc, &format,                    18, 1 ) ) goto End;
-		
+
 	if( bText )
 	{
 		if( !_io_write( desc, tag_LIST,     sizeof(char    ), 4 ) ) goto End;
@@ -195,7 +195,7 @@ bool pxtnPulse_PCM::write  ( void* desc, const char* pstrLIST ) const
 		if( !_io_write( desc, &isft_size,   sizeof(uint32_t), 1 ) ) goto End;
 		if( !_io_write( desc, pstrLIST,     sizeof(char    ), isft_size ) ) goto End;
 	}
-															   
+
 	if( !_io_write( desc, tag_fact,     sizeof(char    ), 8 ) ) goto End;
 	if( !_io_write( desc, &fact_size,   sizeof(uint32_t), 1 ) ) goto End;
 	if( !_io_write( desc, tag_data,     sizeof(char    ), 4 ) ) goto End;
@@ -209,7 +209,7 @@ End:
 	return b_ret;
 }
 
-// stereo / mono 
+// stereo / mono
 bool pxtnPulse_PCM::_Convert_ChannelNum( int32_t new_ch )
 {
 	unsigned char *p_work = NULL;

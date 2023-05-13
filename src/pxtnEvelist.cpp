@@ -190,21 +190,21 @@ static int32_t _ComparePriority( uint8_t kind1, uint8_t kind2 )
 	static const int32_t priority_table[ EVENTKIND_NUM ] =
 	{
 		  0, // EVENTKIND_NULL  = 0
-		 50, // EVENTKIND_ON       
-		 40, // EVENTKIND_KEY      
-		 60, // EVENTKIND_PAN_VOLUME  
-		 70, // EVENTKIND_VELOCITY 
-		 80, // EVENTKIND_VOLUME   
+		 50, // EVENTKIND_ON
+		 40, // EVENTKIND_KEY
+		 60, // EVENTKIND_PAN_VOLUME
+		 70, // EVENTKIND_VELOCITY
+		 80, // EVENTKIND_VOLUME
 		 30, // EVENTKIND_PORTAMENT
 		  0, // EVENTKIND_BEATCLOCK
 		  0, // EVENTKIND_BEATTEMPO
-		  0, // EVENTKIND_BEATNUM  
-		  0, // EVENTKIND_REPEAT   
-		255, // EVENTKIND_LAST     
-		 10, // EVENTKIND_VOICENO  
-		 20, // EVENTKIND_GROUPNO  
-		 90, // EVENTKIND_TUNING 
-		100, // EVENTKIND_PAN_TIME  
+		  0, // EVENTKIND_BEATNUM
+		  0, // EVENTKIND_REPEAT
+		255, // EVENTKIND_LAST
+		 10, // EVENTKIND_VOICENO
+		 20, // EVENTKIND_GROUPNO
+		 90, // EVENTKIND_TUNING
+		100, // EVENTKIND_PAN_TIME
 	};
 
 	return priority_table[ kind1 ] - priority_table[ kind2 ];
@@ -257,7 +257,7 @@ bool pxtnEvelist::Record_Add_i( int32_t clock, uint8_t unit_no, uint8_t kind, in
 			{
 				for( ; true; p = p->next )
 				{
-					if( p->clock != clock                        ){ p_prev = p->prev; p_next = p; break; } 
+					if( p->clock != clock                        ){ p_prev = p->prev; p_next = p; break; }
 					if( unit_no == p->unit_no && kind == p->kind ){ p_prev = p->prev; p_next = p->next; p->kind = EVENTKIND_NULL; break; } // 置き換え
 					if( _ComparePriority( kind, p->kind ) < 0    ){ p_prev = p->prev; p_next = p; break; }// プライオリティを検査
 					if( !p->next                                 ){ p_prev = p; break; }// 末端
@@ -381,7 +381,7 @@ int32_t pxtnEvelist::Record_UnitNo_Replace( uint8_t old_u, uint8_t new_u )
 	if( !_eves  ) return 0;
 
 	int32_t count = 0;
-	
+
 	if( old_u == new_u ) return 0;
 	if( old_u <  new_u )
 	{
@@ -481,7 +481,7 @@ int32_t pxtnEvelist::Record_Value_Omit( uint8_t kind, int32_t value )
 	if( !_eves  ) return 0;
 
 	int32_t count = 0;
-	
+
 	for( EVERECORD* p = _start; p; p = p->next )
 	{
 		if( p->kind == kind )
@@ -499,7 +499,7 @@ int32_t pxtnEvelist::Record_Value_Replace( uint8_t kind, int32_t old_value, int3
 	if( !_eves  ) return 0;
 
 	int32_t count = 0;
-	
+
 	if( old_value == new_value ) return 0;
 	if( old_value <  new_value )
 	{
@@ -688,7 +688,7 @@ void pxtnEvelist::x4x_Read_Add( int32_t clock, uint8_t unit_no, uint8_t kind, in
 			{
 				for( ; true; p = p->next )
 				{
-					if( p->clock != clock                        ){ p_prev = p->prev; p_next = p; break; } 
+					if( p->clock != clock                        ){ p_prev = p->prev; p_next = p; break; }
 					if( unit_no == p->unit_no && kind == p->kind ){ p_prev = p->prev; p_next = p->next; p->kind = EVENTKIND_NULL; break; } // 置き換え
 					if( _ComparePriority( kind, p->kind ) < 0    ){ p_prev = p->prev; p_next = p; break; }// プライオリティを検査
 					if( !p->next                                 ){ p_prev = p; break; }// 末端
@@ -755,7 +755,7 @@ bool pxtnEvelist::io_Write( void* desc, int32_t rough ) const
 	return true;
 }
 
-pxtnERR pxtnEvelist::io_Read( void* desc ) 
+pxtnERR pxtnEvelist::io_Read( void* desc )
 {
 	int32_t size     = 0;
 	int32_t eve_num  = 0;

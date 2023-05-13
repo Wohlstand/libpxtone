@@ -61,7 +61,7 @@ bool pxtnWoice::_Write_Wave( void* desc, const pxtnVOICEUNIT *p_vc, int32_t *p_t
 		if( !_io_write( desc, p_vc->p_pcm->get_p_buf(), 1, size )      ) goto term;
 		*p_total += size;
 		break;
-			
+
 		case pxtnVOICE_OggVorbis: goto term; // not support.
 	}
 
@@ -232,7 +232,7 @@ bool pxtnWoice::PTV_Write( void* desc, int32_t *p_total ) const
 	if( p_total ) *p_total = 16 + total;
 	b_ret  = true;
 term:
-	
+
 	return b_ret;
 }
 

@@ -30,12 +30,12 @@ public :
 	void    Release();
 	bool    GetInfo( int* p_ch, int* p_sps, int* p_smp_num );
 	int32_t GetSize() const;
-			   
+
 	bool    ogg_write ( void* desc ) const;
 	pxtnERR ogg_read  ( void* desc );
 	bool    pxtn_write( void* desc ) const;
 	bool    pxtn_read ( void* desc );
-		       
+
 	bool    copy_from ( const pxtnPulse_Oggv* src );
 };
 #endif
