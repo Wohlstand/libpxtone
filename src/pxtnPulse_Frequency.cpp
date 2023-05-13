@@ -81,7 +81,7 @@ bool pxtnPulse_Frequency::Init()
 		16,         //c   4
 		32,         //d   5
 		64,         //e   6
-		128,        //f   7
+		128         //f   7
 	};
 
 	int32_t    key ;

@@ -849,7 +849,7 @@ pxtnERR pxtnEvelist::io_Unit_Read_x4x_EVENT( void* desc, bool bTailAbsolute, boo
 		x4x_Read_Add( clock, (uint8_t)evnt.unit_index, (uint8_t)evnt.event_kind, value );
 		if( bTailAbsolute && Evelist_Kind_IsTail( evnt.event_kind ) ) absolute += value;
 	}
-	if( e != evnt.event_num ) return pxtnERR_desc_broken;
+	if( e != (int32_t)evnt.event_num ) return pxtnERR_desc_broken;
 
 	x4x_Read_NewKind();
 
@@ -876,7 +876,7 @@ pxtnERR pxtnEvelist::io_Read_x4x_EventNum( void* desc, int32_t* p_num ) const
 		if( !_data_r_v( desc,&work ) ) break;
 		if( !_data_r_v( desc,&work ) ) break;
 	}
-	if( e != evnt.event_num ) return pxtnERR_desc_broken;
+	if( e != (int32_t)evnt.event_num ) return pxtnERR_desc_broken;
 
 	*p_num = evnt.event_num;
 

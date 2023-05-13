@@ -212,7 +212,7 @@ pxtnERR pxtnMaster::io_r_x4x( void* desc )
 		}
 	}
 
-	if( e != mast.event_num ) return pxtnERR_desc_broken;
+	if( e != (int32_t)mast.event_num ) return pxtnERR_desc_broken;
 
 	_beat_num   = beat_num  ;
 	_beat_tempo = beat_tempo;

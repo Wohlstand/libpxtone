@@ -63,6 +63,9 @@ bool pxtnWoice::_Write_Wave( void* desc, const pxtnVOICEUNIT *p_vc, int32_t *p_t
 		break;
 
 		case pxtnVOICE_OggVorbis: goto term; // not support.
+
+	default:
+		goto term; // unknown.
 	}
 
 	b_ret = true;

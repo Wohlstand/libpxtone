@@ -1296,7 +1296,7 @@ bool pxtnService::_x1x_Project_Read( void* desc )
 	beat_clock = prjc.x1x_beat_clock;
 
 	int32_t  ns = 0;
-	for( ns; ns <  _MAX_PROJECTNAME_x1x; ns++ ){ if( !prjc.x1x_name[ ns ] ) break; }
+	for( ; ns <  _MAX_PROJECTNAME_x1x; ns++ ){ if( !prjc.x1x_name[ ns ] ) break; }
 
 	text->set_name_buf( prjc.x1x_name, ns );
 	master->Set( beat_num, beat_tempo, beat_clock );

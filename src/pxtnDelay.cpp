@@ -68,6 +68,7 @@ pxtnERR pxtnDelay::Tone_Ready( int32_t beat_num, float beat_tempo, int32_t sps )
 		case DELAYUNIT_Beat  : _smp_num = (int32_t)( sps * 60            / beat_tempo / _freq ); break;
 		case DELAYUNIT_Meas  : _smp_num = (int32_t)( sps * 60 * beat_num / beat_tempo / _freq ); break;
 		case DELAYUNIT_Second: _smp_num = (int32_t)( sps                              / _freq ); break;
+		default: break;
 		}
 
 		for( int32_t c = 0; c < pxtnMAX_CHANNEL; c++ )

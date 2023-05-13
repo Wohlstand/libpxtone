@@ -14,8 +14,8 @@ class pxtnData
 {
 private:
 
-	void operator = (const pxtnData& src){}
-	pxtnData        (const pxtnData& src){}
+	void operator = (const pxtnData& src){ (void)src; }
+	pxtnData        (const pxtnData& src){ (void)src; }
 
 protected:
 
