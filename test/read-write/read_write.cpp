@@ -117,6 +117,11 @@ int main(int argc, char **argv)
 		printf("Syntax: %s [\"source path\"] [\"temp directory\"]\n\n", argv[0]);
 		return 1;
 	}
+#ifdef px_BIG_ENDIAN
+	printf("-- BIG ENDIAN\n");
+#else
+	printf("-- LITTLE ENDIAN\n");
+#endif
 
 	const char* src = argv[1];
 	const char* dst = argv[2];
@@ -128,6 +133,7 @@ int main(int argc, char **argv)
 	for(const char* const* f = s_pxtone_files; *f != NULL; ++f)
 	{
 		uint16_t exe_version = 996;
+		uint8_t exe_version_src[2];
 		printf("Testing file %s ... ", *f);
 		fflush(stdout);
 
@@ -144,11 +150,11 @@ int main(int argc, char **argv)
 
 		// Get original EXE version from the file
 		fseek(f_src, 16, SEEK_SET);
-		fread(&exe_version, sizeof(uint16_t), 1, f_src);
+		fread(exe_version_src, 1, 2, f_src);
 		fseek(f_src, 0, SEEK_SET);
-		pxSwapLE16(exe_version);
+		exe_version = (uint16_t)((exe_version_src[0] & 0x00FF) | ((exe_version_src[1] << 8) & 0xFF00));
 
-		printf("[exe version: %u] ", exe_version);
+		printf("[exe version: %u {0x%02X, 0x%02X}] ", exe_version, exe_version_src[0], exe_version_src[1]);
 		fflush(stdout);
 
 		FILE *f_dst = fopen(dst_path, "wb");
