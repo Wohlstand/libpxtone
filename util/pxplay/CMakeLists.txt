@@ -1,0 +1,35 @@
+find_package(SDL2 REQUIRED)
+add_library(ADLMIDIEXAMPLE_SDL2 INTERFACE)
+if(TARGET SDL2::SDL2)
+    if(MINGW)
+        target_link_libraries(ADLMIDIEXAMPLE_SDL2 INTERFACE mingw32 SDL2::SDL2main SDL2::SDL2)
+    else()
+        target_link_libraries(ADLMIDIEXAMPLE_SDL2 INTERFACE SDL2::SDL2)
+    endif()
+    target_include_directories(ADLMIDIEXAMPLE_SDL2 INTERFACE ${SDL2_INCLUDE_DIRS})
+else()
+    string(STRIP ${SDL2_LIBRARIES} SDL2_LIBRARIES)
+    target_include_directories(ADLMIDIEXAMPLE_SDL2 INTERFACE ${SDL2_INCLUDE_DIRS})
+    target_link_libraries(ADLMIDIEXAMPLE_SDL2 INTERFACE ${SDL2_LIBRARIES})
+endif()
+
+add_library(libpxtone ALIAS libpxtone_static)
+
+add_executable(pxplay pxplay_sdl.cpp)
+target_link_libraries(pxplay PRIVATE libpxtone ADLMIDIEXAMPLE_SDL2)
+set_nopie(pxplay)
+
+if(NOT MSVC)
+    target_link_libraries(pxplay PRIVATE pthread)
+endif()
+if(NOT WIN32)
+    target_link_libraries(pxplay PRIVATE dl m)
+endif()
+
+if(ENABLE_ADDRESS_SANITIZER)
+    target_compile_options(pxplay PRIVATE -fsanitize=address)
+    target_link_options(pxplay PRIVATE -fsanitize=address)
+endif()
+
+install(TARGETS pxplay
+        RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}")

@@ -71,6 +71,8 @@ else()
 endif()
 #===========================================================================================
 
+option(WITH_PXPLAY          "Build also demo player (SDL2 is required)" OFF)
+
 option(ENABLE_ADDRESS_SANITIZER "Enable the Address Sanitizer GCC feature" OFF)
 
 if(NOT WIN32
@@ -150,4 +152,9 @@ option(WITH_UNIT_TESTS "Enable unit testing" OFF)
 if(WITH_UNIT_TESTS)
     enable_testing()
     add_subdirectory(test)
+endif()
+
+
+if(WITH_PXPLAY)
+    add_subdirectory(util/pxplay)
 endif()
