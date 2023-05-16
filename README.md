@@ -32,16 +32,20 @@ the Big-Endian processors support (for example, PowerPC and MIPS).
 * **[Replaced plain "int" with "int32_t"](https://github.com/Wohlstand/libpxtone/commit/4c2b7c2a680a150107d370fb257c6b2265aa80b7)**
   * On some toolchains, the int32_t in fact is the "long int" which leads to complie errors on 3DS toolchain at the DevkitPro.
 * **[Added support for Big Endian processors](https://github.com/Wohlstand/libpxtone/commit/7314fc157ad55940e40bc62ad301eb11e72dd395)**
-  * Allows the library to work on processors that has the Big Endian byte order, for example, on old Macs that has PowerPC processor, on homebrew Wii, etc.
+  * Allows the library to work on processors that has the Big Endian byte order, for example, on old Macs that has PowerPC processor, on homebrew Wii, etc. You will need to specify the `-Dpx_BIG_ENDIAN` macro when compile project on the Big Endian hardware to make library work correctly.
 
 ## Features
 * **[Added tempo factor parameter](https://github.com/Wohlstand/libpxtone/commit/f0b2118deda068f86edf7076ff60ab3d5fa652f8)**
   * This is a factor that can be used to change the tempo of currently playing song on the fly. This feature is used for various actions.
 * **[Added an option to specify the number of loops to play](https://github.com/Wohlstand/libpxtone/commit/314a09d02ea8c7674dff73535a58ea307ba77b01)**
   * Now you can specify how many times the song should loop.
+* **[Added an option to retrieve the loop start point (the "repeat")](https://github.com/Wohlstand/libpxtone/commit/e36599684189a0b23a714f936a711a102436b280)**
+  * It allows to indicate the loop area at the music file during playback.
 
 ## OGG Vorbis support changes
 * [Exclude static callbacks at OGG Vorbis](https://github.com/Wohlstand/libpxtone/commit/b3e130dcaf637a6d5b18ce416ed5f357a611be6d): This fixes one another warning given by unused static callbacks at Vorbis headers.
 * [Added Tremor support](https://github.com/Wohlstand/libpxtone/commit/d8010e7b5019865dbe0413590a432cd016f88f54) - the integer-only implementation of OGG Vorbis, designed for hardware without or with a limited FPU.
 * [Added use of stb_vorbis](https://github.com/Wohlstand/libpxtone/commit/9d3ff1e96c042050420e02f890fc7e9c39c11d62) - the header-only implementation of OGG Vorbis. It can be used without having full set of OGG Vorbis libraries.
 * [Added missing error code assignment](https://github.com/Wohlstand/libpxtone/commit/29365516f993fc3871aaf83dd6e9bfc1ba38305a) - fixes the "VOID" error being returned instead of the actual error reason.
+
+Among with the `-DpxINCLUDE_OGGVORBIS`, you also can specify the `-DpxINCLUDE_OGGVORBIS_TREMOR` to use the Tremor (integer-only) implementation, or `-DpxINCLUDE_OGGVORBIS_STB` to use the header-only stb_vorbis implementation which is included with the project here.
