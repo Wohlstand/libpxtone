@@ -43,9 +43,13 @@ the Big-Endian processors support (for example, PowerPC and MIPS).
   * It allows to indicate the loop area at the music file during playback.
 
 ## OGG Vorbis support changes
-* [Exclude static callbacks at OGG Vorbis](https://github.com/Wohlstand/libpxtone/commit/b3e130dcaf637a6d5b18ce416ed5f357a611be6d): This fixes one another warning given by unused static callbacks at Vorbis headers.
-* [Added Tremor support](https://github.com/Wohlstand/libpxtone/commit/d8010e7b5019865dbe0413590a432cd016f88f54) - the integer-only implementation of OGG Vorbis, designed for hardware without or with a limited FPU.
-* [Added use of stb_vorbis](https://github.com/Wohlstand/libpxtone/commit/9d3ff1e96c042050420e02f890fc7e9c39c11d62) - the header-only implementation of OGG Vorbis. It can be used without having full set of OGG Vorbis libraries.
-* [Added missing error code assignment](https://github.com/Wohlstand/libpxtone/commit/29365516f993fc3871aaf83dd6e9bfc1ba38305a) - fixes the "VOID" error being returned instead of the actual error reason.
+* [Exclude static callbacks at OGG Vorbis](https://github.com/Wohlstand/libpxtone/commit/b3e130dcaf637a6d5b18ce416ed5f357a611be6d)
+  * This fixes one another warning given by unused static callbacks at Vorbis headers.
+* [Added Tremor support](https://github.com/Wohlstand/libpxtone/commit/d8010e7b5019865dbe0413590a432cd016f88f54)
+  * This is the integer-only implementation of OGG Vorbis, designed for hardware without or with a limited FPU.
+* [Added use of stb_vorbis](https://github.com/Wohlstand/libpxtone/commit/9d3ff1e96c042050420e02f890fc7e9c39c11d62)
+  * This is the header-only implementation of OGG Vorbis. It can be used without having full set of OGG Vorbis libraries.
+* [Added missing error code assignment](https://github.com/Wohlstand/libpxtone/commit/29365516f993fc3871aaf83dd6e9bfc1ba38305a)
+  * This change fixes the "VOID" error being returned instead of the actual error reason.
 
 Among with the `-DpxINCLUDE_OGGVORBIS`, you also can specify the `-DpxINCLUDE_OGGVORBIS_TREMOR` to use the Tremor (integer-only) implementation, or `-DpxINCLUDE_OGGVORBIS_STB` to use the header-only stb_vorbis implementation which is included with the project here.
