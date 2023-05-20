@@ -29,9 +29,9 @@ Pixelが開発したライブラリ: https://pxtone.org/developer/
 
 ## ハードウェアサポート
 * **[プレーンな「int」を「int32_t」に置き換えました。](https://github.com/Wohlstand/libpxtone/commit/4c2b7c2a680a150107d370fb257c6b2265aa80b7)**
-  * 一部のツールチェーンでは、int32_t は実際には「long int」であり、DevkitPro の 3DS ツールチェーンでコンパイル エラーを引き起こします。
+  * 一部のツールチェーンでは、int32_t は実際には「long int」であるため、コンパイル エラーが発生します。
 * **[ビッグエンディアンプロセッサのサポートを追加](https://github.com/Wohlstand/libpxtone/commit/7314fc157ad55940e40bc62ad301eb11e72dd395)**
-  * PowerPCプロセッサを搭載した古い Mac や自作 Wii など、ビッグ エンディアン バイト オーダーを持つプロセッサ上でライブラリが動作できるようにします。　ビッグ エンディアンでプロジェクトをコンパイルする場合は、「`-Dpx_BIG_ENDIAN`」マクロを指定する必要があります。 ライブラリを正しく動作させるためのハードウェア。
+  * PowerPCプロセッサを搭載した古い Macなど、ビッグ エンディアン バイト オーダーを持つプロセッサ上でライブラリが動作できるようにします。　ビッグ エンディアンでプロジェクトをコンパイルする場合は、「`-Dpx_BIG_ENDIAN`」マクロを指定する必要があります。 ライブラリを正しく動作させるためのハードウェア。
 
 ## 特徴
 * **[テンポマルチプライヤパラメータを追加](https://github.com/Wohlstand/libpxtone/commit/f0b2118deda068f86edf7076ff60ab3d5fa652f8)**

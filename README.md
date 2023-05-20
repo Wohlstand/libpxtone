@@ -30,9 +30,9 @@ the Big-Endian processors support (for example, PowerPC and MIPS).
 
 ## Hardware support
 * **[Replaced plain "int" with "int32_t"](https://github.com/Wohlstand/libpxtone/commit/4c2b7c2a680a150107d370fb257c6b2265aa80b7)**
-  * On some toolchains, the int32_t in fact is the "long int" which leads to complie errors on 3DS toolchain at the DevkitPro.
+  * On some toolchains, the int32_t in fact is the "long int" which leads to complie errors.
 * **[Added support for Big Endian processors](https://github.com/Wohlstand/libpxtone/commit/7314fc157ad55940e40bc62ad301eb11e72dd395)**
-  * Allows the library to work on processors that has the Big Endian byte order, for example, on old Macs that has PowerPC processor, on homebrew Wii, etc. You will need to specify the `-Dpx_BIG_ENDIAN` macro when compile project on the Big Endian hardware to make library work correctly.
+  * Allows the library to work on processors that has the Big Endian byte order, for example, on old Macs that has PowerPC processor. You will need to specify the `-Dpx_BIG_ENDIAN` macro when compile project on the Big Endian hardware to make library work correctly.
 
 ## Features
 * **[Added tempo factor parameter](https://github.com/Wohlstand/libpxtone/commit/f0b2118deda068f86edf7076ff60ab3d5fa652f8)**
